@@ -1,0 +1,70 @@
+
+#services:
+#  web:
+#    build: .
+#    ports:
+#      - "8000:8000"
+#    environment:
+#      - DATABASE_URL=postgresql://postgres:12345@db:5432/fastapi
+#      - SECRET_KEY=your_secret_key
+#      - DEBUG=True
+#    volumes:
+#      - .:/app
+#    depends_on:
+#      - db
+#    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+#
+#  db:
+#    image: postgres:17
+#    restart: always
+#    environment:
+#      POSTGRES_USER: postgres
+#      POSTGRES_PASSWORD: 12345
+#      POSTGRES_DB: fastapi
+#    volumes:
+#      - postgres_data:/var/lib/postgresql/data
+#    ports:
+#      - "5432:5432"
+#
+#volumes:
+#  postgres_data:
+
+
+########################  new yml
+
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql://postgres:12345@db:5432/fastapi
+      SECRET_KEY: your_secret_key
+      DEBUG: "True"
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+    networks:
+      - my_network
+
+  db:
+    image: postgres:17
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12345
+      POSTGRES_DB: fastapi
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - my_network
+
+volumes:
+  postgres_data:
+
+networks:
+  my_network:
